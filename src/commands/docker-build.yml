@@ -1,0 +1,26 @@
+description: Builds the docker image
+parameters:
+  registry:
+    description: What registry to log in to, for dockerhub set to blank
+    type: string
+    default: ${DOCKER_REGISTRY:=docker.pkg.github.com}
+  image-name:
+    description: Name of docker image to build
+    type: string
+    default: ${CIRCLE_PROJECT_REPONAME}
+  image-version:
+    description: Version number for image tag
+    type: string
+    default: ${IMAGE_VERSION}
+  image-prefix:
+    description: Prefix for docker image, default value represents the prefix required for Github Package Registry, for dockerhub use navikt, for anything else use /navikt (note that its starting with a slash)
+    type: string
+    default: /navikt/${CIRCLE_PROJECT_REPONAME}
+  path:
+    description: Path to build
+    type: string
+    default: .
+steps:
+  - run:
+      name: Build docker image
+      command: docker build -t <<parameters.registry>><<parameters.image-prefix>>/<<parameters.image-name>>:<<parameters.image-version>> <<parameters.path>>

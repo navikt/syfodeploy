@@ -1,0 +1,18 @@
+description: Logs into docker repository
+parameters:
+  registry:
+    description: What registry to log in to, for dockerhub set to blank
+    type: string
+    default: ${DOCKER_REGISTRY:=docker.pkg.github.com}
+  username:
+    description: Username for logging in
+    type: string
+    default: $DOCKER_USERNAME
+  password:
+    description: Password for logging in
+    type: string
+    default: $DOCKER_PASSWORD
+steps:
+  - run:
+      name: Log in to docker registry
+      command: echo "<<parameters.password>>" | docker login -u "<<parameters.username>>" --password-stdin <<parameters.registry>>
