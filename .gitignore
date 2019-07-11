@@ -1,0 +1,3 @@
+# IDE specifics
+*.iml
+.idea/

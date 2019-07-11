@@ -1,0 +1,7 @@
+description: Initializes everything needed for a multi-job deploy, will generate version numbers and persist it to the workspace
+
+steps:
+  - workspace-create
+  - generate-version-number
+  - load-persisted-env
+  - workspace-persist

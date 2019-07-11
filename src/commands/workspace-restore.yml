@@ -1,0 +1,5 @@
+description: Restores the workspace to /tmp/workspace
+
+steps:
+  - attach_workspace:
+      at: /tmp/workspace

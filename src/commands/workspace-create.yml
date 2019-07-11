@@ -1,0 +1,6 @@
+description: Creates the workspace directory
+
+steps:
+  - run:
+      name: Create workspace
+      command: mkdir /tmp/workspace

@@ -1,0 +1,6 @@
+description: Load all persisted environment variables from workspace
+
+steps:
+  - run:
+      name: Load environment variables from workspace
+      command: cat /tmp/workspace/*.env >> $BASH_ENV

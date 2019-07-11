@@ -1,0 +1,7 @@
+description: Persists everything in /tmp/workspace
+
+steps:
+  - persist_to_workspace:
+      root: /tmp/workspace
+      paths:
+        - "*"

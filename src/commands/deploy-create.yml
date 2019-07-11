@@ -1,0 +1,52 @@
+description: Create deployment
+
+parameters:
+  cluster:
+    description: The target Kubernetes cluster
+    type: string
+  team:
+    description: The team name used for this deployment
+    type: string
+    default: $TEAM_NAME
+  configuration:
+    description: Which configuration to use, this is usually default, but can be seen as the old fasit environments
+    type: string
+    default: default
+  github_token:
+    description: Token used to access github resources and to create a github deployment, by default it will use the deployment-cli command to generate a installation token
+    type: string
+    default: $(deployment-cli token)
+  naiserator_template_name:
+    description: Name of template used for creating the Kubernetes resource
+    type: string
+    default: naiserator.yaml
+  application_name:
+    description: Name of application
+    type: string
+    default: ${CIRCLE_PROJECT_REPONAME}
+  version:
+    description: Version to inject into naiserator template
+    type: string
+    default: ${IMAGE_VERSION}
+
+steps:
+  - run:
+      name: Download required files and generate configuration file
+      command: |
+        source $BASH_ENV
+        gh_token=<<parameters.github_token>>
+        application_config=/tmp/<<parameters.cluster>>-<<parameters.configuration>>-<<parameters.application_name>>-config.json
+        config=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/syfonais/contents/<<parameters.cluster>>/root.json\?ref\=master --fail)
+        overrides=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/syfonais/contents/<<parameters.cluster>>/<<parameters.application_name>>/<<parameters.configuration>>.json\?ref\=master --fail)
+        curl -o /tmp/naiserator.yaml -H "Authorization: token $gh_token" -H "Accept: application/vnd.github.v3.raw" https://api.github.com/repos/navikt/syfonais/contents/<<parameters.naiserator_template_name>>?ref=master
+        if [ ! -z "$overrides" ]; then
+            overrides='{}'
+        fi
+        echo "{\"application_name\":\"<<parameters.application_name>>\", \"namespace\":\"<<parameters.configuration>>\"}" $config $overrides | jq -s '.[0] * .[1] * .[2]' > $application_config
+        cat $application_config
+        
+  - run:
+      name: Create deployment for <<parameters.cluster>>
+      command: |
+        application_config=/tmp/<<parameters.cluster>>-<<parameters.configuration>>-<<parameters.application_name>>-config.json
+        deployment-cli deploy create --cluster=<<parameters.cluster>> --team=<<parameters.team>> --vars=$application_config --resource=/tmp/naiserator.yaml --version=<<parameters.version>> --repository=$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME

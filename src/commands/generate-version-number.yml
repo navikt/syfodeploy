@@ -1,0 +1,12 @@
+description: Generates a version number and writes it to {{workspace}}/version.env
+
+parameters:
+  version_format:
+    description: Bash string format used to generate version number, can have inline commands like $(date)
+    type: string
+    default: $(TZ=Europe/Oslo date +'%m.%d.%H%M')-${CIRCLE_SHA1}
+
+steps:
+  - run:
+      name: Generate version number
+      command: echo "export IMAGE_VERSION=<<parameters.version_format>>\n" > /tmp/workspace/version.env
