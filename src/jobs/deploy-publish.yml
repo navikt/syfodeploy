@@ -28,6 +28,10 @@ parameters:
     description: Version to inject into naiserator template
     type: string
     default: ${IMAGE_VERSION}
+  config_repo:
+    description: Which repository that contains the nais.yaml and json configurations
+    type: string
+    default: syfonais
 
 docker:
   - image: "navikt/deployment-cli:8f43b88bea10759913a98659f1a63009903ca2c4"
@@ -42,3 +46,4 @@ steps:
       naiserator_template_name: <<parameters.naiserator_template_name>>
       application_name: <<parameters.application_name>>
       version: <<parameters.version>>
+      config_repo: <<parameters.config_repo>>

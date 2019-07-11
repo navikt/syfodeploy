@@ -28,6 +28,10 @@ parameters:
     description: Version to inject into naiserator template
     type: string
     default: ${IMAGE_VERSION}
+  config_repo:
+    description: Which repository that contains the nais.yaml and json configurations
+    type: string
+    default: syfonais
 
 steps:
   - run:
@@ -36,9 +40,9 @@ steps:
         source $BASH_ENV
         gh_token=<<parameters.github_token>>
         application_config=/tmp/<<parameters.cluster>>-<<parameters.configuration>>-<<parameters.application_name>>-config.json
-        config=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/syfonais/contents/<<parameters.cluster>>/root.json\?ref\=master --fail)
-        overrides=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/syfonais/contents/<<parameters.cluster>>/<<parameters.application_name>>/<<parameters.configuration>>.json\?ref\=master --fail)
-        curl -o /tmp/naiserator.yaml -H "Authorization: token $gh_token" -H "Accept: application/vnd.github.v3.raw" https://api.github.com/repos/navikt/syfonais/contents/<<parameters.naiserator_template_name>>?ref=master
+        config=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.cluster>>/root.json\?ref\=master --fail)
+        overrides=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.cluster>>/<<parameters.application_name>>/<<parameters.configuration>>.json\?ref\=master --fail)
+        curl -o /tmp/naiserator.yaml -H "Authorization: token $gh_token" -H "Accept: application/vnd.github.v3.raw" https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.naiserator_template_name>>?ref=master
         if [ ! -z "$overrides" ]; then
             overrides='{}'
         fi

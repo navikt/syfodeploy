@@ -1,7 +1,13 @@
 description: Initializes everything needed for a multi-job deploy, will generate version numbers and persist it to the workspace
+parameters:
+  version_format:
+    description: Bash string format used to generate version number, can have inline commands like $(date)
+    type: string
+    default: $(TZ=Europe/Oslo date +'%m.%d.%H%M')-${CIRCLE_SHA1}
 
 steps:
   - workspace-create
-  - generate-version-number
+  - generate-version-number:
+      version_format: <<parameters.version_format>>
   - load-persisted-env
   - workspace-persist
