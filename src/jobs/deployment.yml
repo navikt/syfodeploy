@@ -1,0 +1,14 @@
+description: Loads environment variables and creates a deployment
+
+parameters:
+ deployments:
+  description: Steps for creating deployments
+  type: steps
+  default: []
+
+docker:
+  - image: "navikt/deployment-cli:8f43b88bea10759913a98659f1a63009903ca2c4"
+steps:
+  - workspace-restore
+  - load-persisted-env
+  - steps: <<parameters.deployments>>

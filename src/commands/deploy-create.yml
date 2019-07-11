@@ -43,10 +43,7 @@ steps:
         config=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.cluster>>/root.json\?ref\=master --fail)
         overrides=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.cluster>>/<<parameters.application_name>>/<<parameters.configuration>>.json\?ref\=master --fail)
         curl -o /tmp/naiserator.yaml -H "Authorization: token $gh_token" -H "Accept: application/vnd.github.v3.raw" https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.naiserator_template_name>>?ref=master
-        if [ ! -z "$overrides" ]; then
-            overrides='{}'
-        fi
-        echo "{\"application_name\":\"<<parameters.application_name>>\", \"namespace\":\"<<parameters.configuration>>\"}" $config $overrides | jq -s '.[0] * .[1] * .[2]' > $application_config
+        echo "{\"application_name\":\"<<parameters.application_name>>\", \"namespace\":\"<<parameters.configuration>>\"}" $config ${overrides:='{}'} | jq -s '.[0] * .[1] * .[2]' > $application_config
         cat $application_config
         
   - run:
