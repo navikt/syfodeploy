@@ -7,7 +7,7 @@ parameters:
   default: []
 
 docker:
-  - image: "navikt/deployment-cli:8f43b88bea10759913a98659f1a63009903ca2c4"
+  - image: "navikt/deployment-cli:v0.1.9"
 steps:
   - workspace-restore
   - load-persisted-env
