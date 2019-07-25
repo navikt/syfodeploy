@@ -43,11 +43,11 @@ steps:
         config=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.cluster>>/root.json\?ref\=master --fail)
         overrides=$(curl -H "Authorization: token $gh_token" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.cluster>>/<<parameters.application_name>>/<<parameters.configuration>>.json\?ref\=master --fail)
         curl -o /tmp/naiserator.yaml -H "Authorization: token $gh_token" -H "Accept: application/vnd.github.v3.raw" https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.naiserator_template_name>>?ref=master
-        echo "{\"application_name\":\"<<parameters.application_name>>\", \"namespace\":\"<<parameters.configuration>>\"}" $config ${overrides:='{}'} | jq -s '.[0] * .[1] * .[2]' > $application_config
+        echo $config ${overrides:='{}'} | jq -s '.[0] * .[1]' > $application_config
         cat $application_config
         
   - run:
       name: Create deployment for <<parameters.cluster>>
       command: |
         application_config=/tmp/<<parameters.cluster>>-<<parameters.configuration>>-<<parameters.application_name>>-config.json
-        deployment-cli deploy create --cluster=<<parameters.cluster>> --team=<<parameters.team>> --vars=$application_config --resource=/tmp/naiserator.yaml --version=<<parameters.version>> --repository=$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+        deployment-cli deploy create --cluster=<<parameters.cluster>> --team=<<parameters.team>> --vars=$application_config --resource=/tmp/naiserator.yaml --var version=<<parameters.version>> --var namespace=<<parameters.configuration>> --var application_name=<<parameters.application_name>> --repository=$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
