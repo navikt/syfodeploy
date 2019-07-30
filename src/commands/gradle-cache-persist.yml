@@ -3,9 +3,9 @@ description: Persist cache for gradle builds
 steps:
   - save_cache:
       paths:
-        - $HOME/.gradle/caches/
+        - ~/.gradle/caches/
       key: gradle-cache-{{ checksum "build.gradle.kts" }}
   - save_cache:
       paths:
-        - $HOME/.gradle/wrapper/
+        - ~/.gradle/wrapper/
       key: gradle-wrapper-cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
