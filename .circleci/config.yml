@@ -4,9 +4,6 @@ orbs:
   orb-tools: circleci/orb-tools@8.27.4
   slack: circleci/slack@3.3.0
 
-jobs:
-
-
 workflows:
   branch_publish:
     jobs:
@@ -14,9 +11,11 @@ workflows:
           name: branch_lint
       - orb-tools/pack:
           name: branch_pack
-          requires: branch_lint
+          requires:
+            - branch_lint
       - orb-tools/publish-dev:
           name: branch_publish
-          requires: branch_pack
+          requires:
+            - branch_pack
           alpha-version-ref: navikt/barkendeploy@dev:$CIRCLE_BRANCH
           publish-token-variable: CIRCLE_TOKEN_DEV
