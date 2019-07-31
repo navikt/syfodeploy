@@ -27,21 +27,21 @@ workflows:
         name: release_lint
         filters:
           tags:
-            only: /v\d+.\d+.\d+
+            only: /^v\d+.\d+.\d+/
     - orb-tools/pack:
         name: release_pack
         requires:
           - release_lint
         filters:
           tags:
-            only: /v\d+.\d+.\d+
+            only: /^v\d+.\d+.\d+/
     - release_await_approval:
         type: approval
         requires:
           - release_pack
         filters:
           tags:
-            only: /v\d+.\d+.\d+
+            only: /^v\d+.\d+.\d+/
     - orb-tools/publish:
         name: release_publish
         requires:
@@ -49,4 +49,4 @@ workflows:
         orb-ref: navikt/barkendeploy@$CIRCLE_TAG
         filters:
           tags:
-            only: /v\d+.\d+.\d+
+            only: /^v\d+.\d+.\d+/
