@@ -19,4 +19,5 @@ workflows:
           requires:
             - branch_pack
           alpha-version-ref: dev:$CIRCLE_BRANCH
+          sha-version-ref: dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
           publish-token-variable: CIRCLE_TOKEN_DEV
