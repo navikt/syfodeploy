@@ -1,0 +1,14 @@
+description: Skip the rest of this stage if the expression result in anything else then true
+parameters:
+  env_var:
+    description: Env var to check
+    type: string
+    default: ${DEPLOY_BRANCH:=false}
+
+steps:
+  - run:
+      name: If built on a branch, check if it should be deployed
+      command: |
+        if [ "<<parameters.env_var>>" != true ] && [ "$CIRCLE_BRANCH" != "master" ]; then
+          circleci-agent step halt
+        fi
