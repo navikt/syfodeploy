@@ -34,12 +34,18 @@ workflows:
         name: release_pack
         requires:
           - release_lint
+        tags:
+          only: /^v[0-9]+.[0-9].[0-9]/
     - release_await_approval:
         type: approval
         requires:
           - release_pack
+        tags:
+          only: /^v[0-9]+.[0-9].[0-9]/
     - orb-tools/publish:
         name: release_publish
         requires:
           - release_await_approval
         orb-ref: navikt/barkendeploy@$CIRCLE_TAG
+        tags:
+          only: /^v[0-9]+.[0-9].[0-9]/
