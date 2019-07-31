@@ -26,27 +26,20 @@ workflows:
     - orb-tools/lint:
         name: release_lint
         filters:
+          branches:
+            ignore: /.*/
           tags:
             only: /^v[0-9]+.[0-9].[0-9]/
     - orb-tools/pack:
         name: release_pack
         requires:
           - release_lint
-        filters:
-          tags:
-            only: /^v[0-9]+.[0-9].[0-9]/
     - release_await_approval:
         type: approval
         requires:
           - release_pack
-        filters:
-          tags:
-            only: /^v[0-9]+.[0-9].[0-9]/
     - orb-tools/publish:
         name: release_publish
         requires:
           - release_await_approval
         orb-ref: navikt/barkendeploy@$CIRCLE_TAG
-        filters:
-          tags:
-            only: /^v[0-9]+.[0-9].[0-9]/
