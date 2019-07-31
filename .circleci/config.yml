@@ -15,7 +15,7 @@ workflows:
             - branch_lint
       - orb-tools/publish-dev:
           name: branch_publish
-          orb-name: barkendeploy
+          orb-name: navikt/barkendeploy
           requires:
             - branch_pack
           alpha-version-ref: dev:$CIRCLE_BRANCH
