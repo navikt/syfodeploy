@@ -45,7 +45,7 @@ steps:
         curl -o /tmp/naiserator.yaml -H "Authorization: token $gh_token" -H "Accept: application/vnd.github.v3.raw" https://api.github.com/repos/navikt/<<parameters.config_repo>>/contents/<<parameters.naiserator_template_name>>?ref=master
         echo $config ${overrides:='{}'} | jq -s '.[0] * .[1]' > $application_config
         cat $application_config
-        
+
   - run:
       name: Create deployment for <<parameters.cluster>>
       command: |

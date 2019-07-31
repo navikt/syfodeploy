@@ -1,10 +1,10 @@
 description: Loads environment variables and creates a deployment
 
 parameters:
- deployments:
-  description: Steps for creating deployments
-  type: steps
-  default: []
+  deployments:
+    description: Steps for creating deployments
+    type: steps
+    default: []
 
 docker:
   - image: "navikt/deployment-cli:v0.2.0"
