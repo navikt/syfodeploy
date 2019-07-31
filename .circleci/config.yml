@@ -47,7 +47,7 @@ workflows:
     - orb-tools/publish:
         name: release_publish
         attach-workspace: true
-        orb-ref: navikt/barkendeploy@$CIRCLE_TAG
+        orb-ref: navikt/barkendeploy@${CIRCLE_TAG:1}
         context: orb-publishing
         requires:
           - release_await_approval
