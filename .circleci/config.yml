@@ -21,3 +21,23 @@ workflows:
           alpha-version-ref: dev:$CIRCLE_BRANCH
           sha-version-ref: dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
           publish-token-variable: CIRCLE_TOKEN_DEV
+  tag_release:
+    jobs:
+    - orb-tools/lint:
+        name: release_lint
+    - orb-tools/pack:
+        name: release_pack
+        requires:
+          - release_lint
+    - release_await_approval:
+        type: approval
+        requires:
+          - release_pack
+    - orb-tools/publish:
+        name: release_publish
+        requires:
+          - release_await_approval
+        orb-ref: navikt/barkendeploy@$CIRCLE_TAG
+        filters:
+          tags:
+            only: /v\d+.\d+.\d+
