@@ -4,7 +4,7 @@ parameters:
   regex:
     description: Regex for finding generated test reports
     type: string
-    default: .*/build/test-results/test/.*xml
+    default: .*/build/test-results/test/.*.xml
 
 steps:
   - run:
