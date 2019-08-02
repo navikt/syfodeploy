@@ -1,0 +1,19 @@
+description: Collect and store JUnit test metadata
+
+parameters:
+  regex:
+    description: Regex for finding generated test reports
+    type: string
+    default: .*/build/test-results/test/.*xml
+
+steps:
+  - run:
+      name: Save test results
+      command: |
+        mkdir -p ~/test-results/junit/
+        find . -type f -regex "<<parameters.regex>>" -exec cp {} ~/test-results/junit/ \;
+      when: always
+  - store_test_results:
+      path: ~/test-results
+  - store_artifacts:
+      path: ~/test-results/junit
