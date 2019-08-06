@@ -11,9 +11,8 @@ get_deployments() {
     repository=$(echo $1 | jq --raw-input)
     cluster=$2
     if [ ! -z "$cluster" ]; then
-        cluster=`$(echo "$cluster" | jq --raw-input)`;
+        cluster=`echo $cluster | jq --raw-input`;
     fi
-    echo $cluster >&2
     query='
         query($cluster: [String!], $repository: String!) { 
         repository(owner: "navikt", name: $repository) { 
