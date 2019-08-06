@@ -22,6 +22,7 @@ get_deployments() {
                     payload
                     description
                     updatedAt
+                    environment
                     ref {
                         name
                     }
@@ -50,8 +51,8 @@ cmd_list() {
     repository=$1
     cluster=$2
     deployments=$(get_deployments $repository $cluster)
-    printf "ID\t\tDeployed at\t\tBranch\tStatus\t\tCommit\n"
-    echo "$deployments" | jq -r '.[] | select(.latestStatus.state == "INACTIVE" or .latestStatus.state == "SUCCESS") | "\(.databaseId)\t\(.updatedAt)\t\(.ref.name)\t\(.latestStatus.state)  \t\(.commitOid)\n\(.commit.message)\n======================"'
+    printf "ID\t\tDeployed at\t\tBranch\tStatus\t\tCommit\tCluster\n"
+    echo "$deployments" | jq -r '.[] | select(.latestStatus.state == "INACTIVE" or .latestStatus.state == "SUCCESS") | "\(.databaseId)\t\(.updatedAt)\t\(.ref.name)\t\(.latestStatus.state)  \t\(.commitOid)\t\(.environment)\n\(.commit.message)\n======================"'
 }
 
 cmd_extract() {
