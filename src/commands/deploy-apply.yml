@@ -29,4 +29,4 @@ steps:
   - run:
       name: Create deployment for <<parameters.cluster>>
       command: |
-        deployment-cli deploy create --cluster=<<parameters.cluster>> --team=<<parameters.team>> --resource=/tmp/naiserator.yaml --var version=<<parameters.version>> --var namespace=<<parameters.configuration>> --var application_name=<<parameters.application_name>> --repository=$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+        deployment-cli deploy create --cluster=<<parameters.cluster>> --team=<<parameters.team>> --resource=<<parameters.naiserator_file>> --var version=<<parameters.version>> --var namespace=<<parameters.configuration>> --var application_name=<<parameters.application_name>> --repository=$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
