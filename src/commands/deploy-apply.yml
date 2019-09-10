@@ -1,0 +1,32 @@
+description: Applies a plain yaml using deployment-cli
+
+parameters:
+  cluster:
+    description: The target Kubernetes cluster
+    type: string
+  team:
+    description: The team name used for this deployment
+    type: string
+    default: $TEAM_NAME
+  configuration:
+    description: Which configuration to use, this is usually default, but can be seen as the old fasit environments
+    type: string
+    default: default
+  naiserator_file:
+    description: Name of template used for creating the Kubernetes resource
+    type: string
+    default: naiserator.yaml
+  application_name:
+    description: Name of application
+    type: string
+    default: ${CIRCLE_PROJECT_REPONAME}
+  version:
+    description: Version to inject into naiserator template
+    type: string
+    default: ${IMAGE_VERSION}
+
+steps:
+  - run:
+      name: Create deployment for <<parameters.cluster>>
+      command: |
+        deployment-cli deploy create --cluster=<<parameters.cluster>> --team=<<parameters.team>> --resource=/tmp/naiserator.yaml --var version=<<parameters.version>> --var namespace=<<parameters.configuration>> --var application_name=<<parameters.application_name>> --repository=$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
